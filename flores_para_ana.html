@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Flores amarillas para mi amorcito</title>
+<style>
+  :root{
+    --amarillo:#FFD43B;
+    --amarillo2:#FFE794;
+    --centro:#6e3f2a;
+    --verde:#2e7d32;
+    --verde2:#5daa5b;
+    --rojo:#ff5b73;
+    --dorado:#f7e7a8;
+    --brillo:rgba(255,255,255,.35);
+  }
+
+  /* Fondo “premium” */
+  body{
+    margin:0;
+    height:100vh;
+    overflow:hidden;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    color:#fff;
+    background:
+      radial-gradient(1200px 600px at 70% 120%, rgba(255,220,90,.12), rgba(0,0,0,0) 60%),
+      radial-gradient(900px 900px at -10% -10%, rgba(110,170,255,.12), rgba(0,0,0,0) 55%),
+      linear-gradient(180deg, #0b1230 0%, #0a0f24 55%, #091021 100%);
+  }
+
+  /* Estrellas sutiles */
+  .stars{
+    position:absolute; inset:0;
+    background-image:
+      radial-gradient(2px 2px at 10% 20%, #fff8, transparent 50%),
+      radial-gradient(2px 2px at 40% 10%, #fff7, transparent 50%),
+      radial-gradient(1.5px 1.5px at 70% 30%, #fff7, transparent 50%),
+      radial-gradient(1.5px 1.5px at 85% 55%, #fff6, transparent 50%),
+      radial-gradient(2px 2px at 25% 70%, #fff7, transparent 50%),
+      radial-gradient(1.5px 1.5px at 60% 80%, #fff7, transparent 50%);
+    opacity:.5;
+    animation: parpadeo 6s linear infinite;
+    pointer-events:none;
+  }
+  @keyframes parpadeo{
+    0%,100%{opacity:.45} 50%{opacity:.7}
+  }
+
+  /* Contenedor principal */
+  .stage{
+    position:relative; width:100%; height:100%;
+  }
+
+  /* Texto */
+  .frase{
+    position:absolute; top:18px; left:50%; transform:translateX(-50%);
+    text-align:center; line-height:1.25;
+    text-shadow:0 2px 10px rgba(0,0,0,.7), 0 0 18px #ffef99aa;
+    font-weight:700;
+  }
+  .frase .uno{
+    font-size:min(4.8vw,32px); color:#ffe36e;
+  }
+  .frase .dos{
+    margin-top:6px;
+    font-size:min(5.2vw,36px); color:#ffd43b;
+  }
+
+  /* Suelo suave */
+  .ground{
+    position:absolute; left:50%; bottom:-8vh; transform:translateX(-50%);
+    width:120vmin; height:30vmin; filter:blur(16px);
+    background:
+      radial-gradient(40vmin 12vmin at 50% 20%, rgba(0,0,0,.45), transparent 70%);
+    pointer-events:none;
+  }
+
+  /* SVG de flores */
+  svg{
+    position:absolute; inset:0; width:100%; height:100%;
+    overflow:visible;
+  }
+
+  /* Tallo que “crece” */
+  .stem{
+    stroke:var(--verde); fill:none; stroke-width:10; stroke-linecap:round;
+    filter: drop-shadow(0 3px 0 rgba(0,0,0,.25));
+    stroke-dasharray: 800;
+    stroke-dashoffset: 800;
+    animation: grow 3.2s ease-out forwards;
+  }
+  .stem.s2{ animation-delay:.35s; stroke:#2f6f2e;}
+  .stem.s3{ animation-delay:.6s; stroke:#2a6b2b;}
+  .stem.s4{ animation-delay:.9s;}
+  @keyframes grow{to{stroke-dashoffset:0}}
+
+  /* Hojas */
+  .leaf{
+    fill:linear-gradient(#2e7d32,#27682b);
+    fill:var(--verde2);
+    filter: drop-shadow(0 2px 0 rgba(0,0,0,.25));
+    transform-box: fill-box; transform-origin: 10% 90%;
+    transform: scale(0) rotate(-12deg);
+    animation: leafIn .9s ease-out forwards;
+  }
+  .leaf.r{ transform-origin: 90% 90%;}
+  .leaf.d1{ animation-delay:1.0s}
+  .leaf.d2{ animation-delay:1.25s}
+  .leaf.d3{ animation-delay:1.5s}
+  .leaf.d4{ animation-delay:1.75s}
+  @keyframes leafIn{
+    0%{transform: scale(0) rotate(-12deg)}
+    80%{transform: scale(1.05) rotate(0deg)}
+    100%{transform: scale(1) rotate(0deg)}
+  }
+
+  /* Pétalos que abren */
+  .petal{
+    fill: url(#petalGrad);
+    transform-box: fill-box; transform-origin: 50% 90%;
+    transform: scale(0) rotate(var(--r,0deg));
+    filter: drop-shadow(0 2px 0 rgba(0,0,0,.25)) drop-shadow(0 8px 10px rgba(255,220,50,.2));
+    animation: bloom .9s cubic-bezier(.2,.8,.25,1) forwards;
+  }
+  .f1 .petal{ animation-delay:2.2s}
+  .f2 .petal{ animation-delay:2.35s}
+  .f3 .petal{ animation-delay:2.5s}
+  .f4 .petal{ animation-delay:2.65s}
+  .f5 .petal{ animation-delay:2.8s}
+  @keyframes bloom{
+    0%{transform: scale(0) rotate(var(--r,0))}
+    80%{transform: scale(1.06) rotate(var(--r,0))}
+    100%{transform: scale(1) rotate(var(--r,0))}
+  }
+
+  /* Centro */
+  .center{
+    fill: url(#centerGrad);
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,.4));
+    opacity:0; transform: scale(.6);
+    animation: popIn .8s ease-out forwards; animation-delay: 2.9s;
+  }
+  @keyframes popIn{
+    to{opacity:1; transform: scale(1)}
+  }
+
+  /* Corazones flotantes */
+  .heart{
+    position:absolute; width:18px; height:18px; transform: translate(-50%,-50%) rotate(45deg);
+    animation: floatUp linear forwards;
+    pointer-events:none;
+  }
+  .heart::before,.heart::after{
+    content:""; position:absolute; inset:0; background:var(--rojo);
+    border-radius:50%;
+  }
+  .heart::before{ left:-50%}
+  .heart::after{ top:-50%}
+  @keyframes floatUp{
+    from{ transform: translate(var(--x,0), var(--y,0)) rotate(45deg); opacity:0}
+    10%{opacity:.9}
+    90%{opacity:.9}
+    to{ transform: translate(var(--x,0), calc(var(--y,0) - 38vh)) rotate(45deg); opacity:0}
+  }
+
+  /* Luciérnagas */
+  canvas#fireflies{ position:absolute; inset:0; pointer-events:none; }
+
+  /* Botoncito para guardar imagen (captura) */
+  .btns{
+    position: absolute; right:14px; bottom:14px; display:flex; gap:10px;
+  }
+  .btn{
+    background:#ffffff18; border:1px solid #ffffff2e;
+    color:#ffe36e; padding:10px 12px; border-radius:10px; cursor:pointer;
+    backdrop-filter: blur(4px);
+    transition: transform .15s ease, background .2s ease;
+    font-weight:600;
+  }
+  .btn:hover{ transform: translateY(-2px); background:#ffffff25}
+
+  /* Sutileza extra */
+  .glow{
+    position:absolute; left:50%; top:65%;
+    width:65vmin; height:40vmin; transform:translate(-50%,-50%);
+    background: radial-gradient(40vmin 22vmin at 50% 60%, rgba(255,235,120,.20), rgba(255,200,0,.10) 35%, transparent 70%);
+    filter: blur(6px);
+    pointer-events:none;
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="stars"></div>
+  <div class="glow"></div>
+  <div class="ground"></div>
+
+  <!-- Frase -->
+  <div class="frase">
+    <div class="uno">Si el tiempo es un jardín, el tuyo es donde quiero florecer</div>
+    <div class="dos">Te quiero mucho mi amor ❤️</div>
+  </div>
+
+  <!-- Luciérnagas -->
+  <canvas id="fireflies"></canvas>
+
+  <!-- Ramo en SVG -->
+  <svg viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+    <defs>
+      <!-- Gradiente pétalos -->
+      <radialGradient id="petalGrad" cx="50%" cy="20%" r="80%">
+        <stop offset="0%" stop-color="#fffde1"/>
+        <stop offset="35%" stop-color="#fff2a9"/>
+        <stop offset="70%" stop-color="var(--amarillo)"/>
+        <stop offset="100%" stop-color="#e2a400"/>
+      </radialGradient>
+      <!-- Gradiente centro -->
+      <radialGradient id="centerGrad" cx="50%" cy="40%" r="60%">
+        <stop offset="0%" stop-color="#3c2418"/>
+        <stop offset="50%" stop-color="#5a3a29"/>
+        <stop offset="100%" stop-color="#7d513d"/>
+      </radialGradient>
+    </defs>
+
+    <!-- Tallos -->
+    <path class="stem s1" d="M500,980 C520,800 440,620 500,470" />
+    <path class="stem s2" d="M500,980 C420,820 560,640 610,520" />
+    <path class="stem s3" d="M500,980 C580,820 420,640 390,520" />
+    <path class="stem s4" d="M500,980 C470,865 530,760 500,690" />
+
+    <!-- Hojas -->
+    <!-- izquierda -->
+    <path class="leaf d1" d="M470,800 C420,760 400,720 440,680 C480,640 540,660 520,700 C500,740 500,760 470,800" />
+    <path class="leaf d2" d="M560,740 C520,720 500,690 520,660 C540,630 600,630 595,675 C590,720 582,728 560,740" />
+    <!-- derecha -->
+    <path class="leaf r d3" d="M610,640 C642,620 680,595 670,560 C660,525 602,530 602,570 C602,610 600,620 610,640" />
+    <path class="leaf r d4" d="M380,640 C350,625 315,600 330,565 C345,530 405,540 405,580 C405,615 405,620 380,640" />
+
+    <!-- Flores (cada grupo f* es una flor) -->
+    <!-- Flor superior -->
+    <g class="flower f1" transform="translate(500 430)">
+      <g>
+        <!-- 8 pétalos -->
+        <ellipse class="petal" style="--r:-8deg"  rx="60" ry="95" cx="0"   cy="0"/>
+        <ellipse class="petal" style="--r:37deg"  rx="60" ry="95" cx="0"   cy="0"/>
+        <ellipse class="petal" style="--r:82deg"  rx="60" ry="95" cx="0"   cy="0"/>
+        <ellipse class="petal" style="--r:127deg" rx="60" ry="95" cx="0"   cy="0"/>
+        <ellipse class="petal" style="--r:172deg" rx="60" ry="95" cx="0"   cy="0"/>
+        <ellipse class="petal" style="--r:217deg" rx="60" ry="95" cx="0"   cy="0"/>
+        <ellipse class="petal" style="--r:262deg" rx="60" ry="95" cx="0"   cy="0"/>
+        <ellipse class="petal" style="--r:307deg" rx="60" ry="95" cx="0"   cy="0"/>
+      </g>
+      <circle class="center" r="48" cx="10" cy="55"/>
+    </g>
+
+    <!-- Flor derecha -->
+    <g class="flower f2" transform="translate(635 520) rotate(-8)">
+      <g>
+        <ellipse class="petal" style="--r:-8deg"  rx="52" ry="86" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:32deg"  rx="52" ry="86" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:72deg"  rx="52" ry="86" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:112deg" rx="52" ry="86" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:152deg" rx="52" ry="86" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:192deg" rx="52" ry="86" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:232deg" rx="52" ry="86" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:272deg" rx="52" ry="86" cx="0" cy="0"/>
+      </g>
+      <circle class="center" r="42" cx="10" cy="55"/>
+    </g>
+
+    <!-- Flor izquierda -->
+    <g class="flower f3" transform="translate(365 520) rotate(8)">
+      <g>
+        <ellipse class="petal" style="--r:-8deg"  rx="52" ry="86" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:32deg"  rx="52" ry="86" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:72deg"  rx="52" ry="86" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:112deg" rx="52" ry="86" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:152deg" rx="52" ry="86" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:192deg" rx="52" ry="86" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:232deg" rx="52" ry="86" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:272deg" rx="52" ry="86" cx="0" cy="0"/>
+      </g>
+      <circle class="center" r="42" cx="10" cy="55"/>
+    </g>
+
+    <!-- Flor delantera -->
+    <g class="flower f4" transform="translate(500 610) scale(0.9)">
+      <g>
+        <ellipse class="petal" style="--r:0deg"  rx="50" ry="80" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:45deg" rx="50" ry="80" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:90deg" rx="50" ry="80" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:135deg" rx="50" ry="80" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:180deg" rx="50" ry="80" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:225deg" rx="50" ry="80" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:270deg" rx="50" ry="80" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:315deg" rx="50" ry="80" cx="0" cy="0"/>
+      </g>
+      <circle class="center" r="40" cx="10" cy="55"/>
+    </g>
+
+    <!-- Flor pequeña extra -->
+    <g class="flower f5" transform="translate(425 685) scale(0.75)">
+      <g>
+        <ellipse class="petal" style="--r:0deg"  rx="42" ry="70" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:45deg" rx="42" ry="70" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:90deg" rx="42" ry="70" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:135deg" rx="42" ry="70" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:180deg" rx="42" ry="70" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:225deg" rx="42" ry="70" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:270deg" rx="42" ry="70" cx="0" cy="0"/>
+        <ellipse class="petal" style="--r:315deg" rx="42" ry="70" cx="0" cy="0"/>
+      </g>
+      <circle class="center" r="35" cx="10" cy="55"/>
+    </g>
+  </svg>
+
+  <div class="btns">
+    <button class="btn" id="spawn">💛 Más corazones</button>
+    <button class="btn" id="save">📸 Guardar imagen</button>
+  </div>
+</div>
+
+<script>
+/* ------- Corazones flotantes ------- */
+const stage = document.querySelector('.stage');
+function crearCorazon(x, y, dur=6000, size=18){
+  const h = document.createElement('div');
+  h.className = 'heart';
+  h.style.left = x + 'px';
+  h.style.top  = y + 'px';
+  const dx = (Math.random()*60-30);
+  const delay = Math.random()*400;
+  h.style.setProperty('--x', (x + dx - window.innerWidth/2) + 'px');
+  h.style.setProperty('--y', (y - window.innerHeight) + 'px');
+  h.style.width = h.style.height = size + 'px';
+  h.style.animationDuration = dur + 'ms';
+  h.style.animationDelay = delay + 'ms';
+  stage.appendChild(h);
+  setTimeout(()=> h.remove(), dur + delay + 1000);
+}
+// lluvia suave al inicio
+for(let i=0;i<14;i++){
+  setTimeout(()=> crearCorazon( window.innerWidth*(.25+.5*Math.random()),
+                                window.innerHeight*(.55+.35*Math.random()),
+                                6500+Math.random()*2500,
+                                14+Math.random()*12 ), 2200 + i*180);
+}
+document.getElementById('spawn').onclick = ()=>{
+  for(let i=0;i<12;i++){
+    crearCorazon( window.innerWidth*(.2+.6*Math.random()),
+                  window.innerHeight*(.55+.4*Math.random()),
+                  5500+Math.random()*2500,
+                  14+Math.random()*10 );
+  }
+};
+
+/* ------- Luciérnagas con canvas ------- */
+const c = document.getElementById('fireflies');
+const ctx = c.getContext('2d');
+let W,H; function size(){W=c.width=innerWidth; H=c.height=innerHeight;}
+size(); addEventListener('resize', size);
+
+const N = 70;
+const flies = Array.from({length:N}, ()=>({
+  x: Math.random()*W, y: Math.random()*H*.8,
+  r: 1.2 + Math.random()*2.2,
+  a: Math.random()*Math.PI*2,
+  s: .3 + Math.random()*0.7,
+  p: Math.random()*1000
+}));
+function loop(t){
+  ctx.clearRect(0,0,W,H);
+  for(const f of flies){
+    f.a += (Math.sin((t+f.p)/1200)+1)*0.004;
+    f.x += Math.cos(f.a)*f.s;
+    f.y += Math.sin(f.a*1.2)*f.s*0.6 - 0.05;
+    if(f.x<0) f.x=W; if(f.x>W) f.x=0;
+    if(f.y<0) f.y=H*.8; if(f.y>H*.85) f.y=H*.85;
+    const grad = ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,f.r*6);
+    grad.addColorStop(0,'rgba(255,255,180,.9)');
+    grad.addColorStop(.4,'rgba(255,235,120,.6)');
+    grad.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=grad;
+    ctx.beginPath(); ctx.arc(f.x,f.y,f.r*6,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='rgba(255,245,160,.9)';
+    ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,Math.PI*2); ctx.fill();
+  }
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* ------- Guardar imagen (captura rápida) ------- */
+document.getElementById('save').onclick = async ()=>{
+  // Captura muy simple usando API paintWorklet/HTML2Canvas no disponible sin librería,
+  // así que hacemos un truco: abrir diálogo de impresión (Ctrl+P para PDF).
+  alert("Para guardar: usa Ctrl/Cmd + P y elige 'Guardar como PDF'.\n(Es la forma más nítida sin librerías externas).");
+};
+</script>
+</body>
+</html>
